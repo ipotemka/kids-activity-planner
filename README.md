@@ -126,3 +126,5 @@ supabase/
 | `tasks` | title, completed, created_by, updated_by |
 
 All tables have `created_at` / `updated_at` timestamps and full audit trail.
+
+Deployment update
