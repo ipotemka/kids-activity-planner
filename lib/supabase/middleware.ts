@@ -1,8 +1,11 @@
 import { createServerClient, type CookieMethodsServer } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-type SetAllParam = Parameters<CookieMethodsServer["setAll"]>[0];
-
+type SetAllParam = NonNullable<CookieMethodsServer["setAll"]> extends (
+  cookies: infer P
+) => unknown
+  ? P
+  : never;
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
