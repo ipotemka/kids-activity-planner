@@ -70,7 +70,7 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
       </div>
 
       {/* Task list */}
-      <div className="px-4 py-3 space-y-1 max-h-72 overflow-y-auto scrollbar-thin">
+      <div className="px-4 py-3 space-y-1">
         {tasks.map((task) => (
           <div
             key={task.id}
