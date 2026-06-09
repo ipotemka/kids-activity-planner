@@ -207,18 +207,6 @@ async function handleAddTask(title: string) {
 
 setTasks((prev) => [...prev, data[0] as Task]);
 }
-    .from("tasks")
-    .insert({ title, completed: false })
-    .select()
-    .single();
-
-  if (error) {
-    alert(`Ошибка добавления задачи: ${error.message}`);
-    return;
-  }
-
-  setTasks((prev) => [...prev, newTask as Task]);
-}
 
 async function handleDeleteTask(id: string) {
   const { error } = await supabase.from("tasks").delete().eq("id", id);
