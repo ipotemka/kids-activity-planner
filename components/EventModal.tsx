@@ -50,18 +50,47 @@ export function EventModal({
 
   const [saving, setSaving] = useState(false);
 
-  function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
-    setForm((f) => ({ ...f, [key]: value }));
+const [extraDates, setExtraDates] = useState<string[]>([]);
+
+function set<K extends keyof typeof form>(
+  key: K,
+  value: (typeof form)[K]
+) {
+  setForm((f) => ({ ...f, [key]: value }));
+}
+
+function addExtraDate() {
+  setExtraDates((dates) => [...dates, form.start_date]);
+}
+
+function updateExtraDate(index: number, value: string) {
+  setExtraDates((dates) =>
+    dates.map((date, i) => (i === index ? value : date))
+  );
+}
+
+function removeExtraDate(index: number) {
+  setExtraDates((dates) => dates.filter((_, i) => i !== index));
+}
+
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+
+  setSaving(true);
+
+  await onSave(form);
+
+  for (const date of extraDates) {
+    await onSave({
+      ...form,
+      start_date: date,
+      end_date: date,
+    });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    await onSave(form);
-    setSaving(false);
-    onClose();
-  }
-
+  setSaving(false);
+  onClose();
+}
   return (
     <div
       className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
@@ -165,6 +194,36 @@ export function EventModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">
+                <div className="space-y-2">
+  {extraDates.map((date, index) => (
+    <div key={index} className="flex gap-2 items-center">
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => updateExtraDate(index, e.target.value)}
+        min="2026-06-22"
+        max="2026-07-20"
+        className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+      />
+
+      <button
+        type="button"
+        onClick={() => removeExtraDate(index)}
+        className="text-red-500 hover:text-red-700 text-sm"
+      >
+        Удалить
+      </button>
+    </div>
+  ))}
+
+  <button
+    type="button"
+    onClick={addExtraDate}
+    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+  >
+    + Добавить ещё дату
+  </button>
+</div>
                 Время начала
               </label>
               <input
