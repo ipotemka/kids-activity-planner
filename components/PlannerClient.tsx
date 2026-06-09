@@ -29,7 +29,7 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
   const [defaultDate, setDefaultDate] = useState<Date | undefined>();
   const [defaultSlot, setDefaultSlot] = useState<EventSlot>("daytime");
 
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const weeks = groupByWeek(getAllDays());
 
   useEffect(() => {
