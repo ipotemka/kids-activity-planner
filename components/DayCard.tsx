@@ -1,7 +1,15 @@
 "use client";
-import { CalendarEvent, EventSlot, Child, CHILD_COLORS, SLOT_LABELS } from "@/lib/types";
+
+import {
+  CalendarEvent,
+  EventSlot,
+  Child,
+  CHILD_COLORS,
+  SLOT_LABELS,
+} from "@/lib/types";
 import { ActivityCard } from "./ActivityCard";
 import { format, isWeekend } from "date-fns";
+import { ru } from "date-fns/locale";
 import { Plus } from "lucide-react";
 
 const SLOTS: EventSlot[] = ["daytime", "after-camp", "evening"];
@@ -26,7 +34,6 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
           : "border-slate-100 bg-white"
       }`}
     >
-      {/* Day header */}
       <div
         className={`px-5 py-3 flex items-center justify-between ${
           weekend ? "bg-amber-50" : "bg-slate-50/80"
@@ -38,28 +45,31 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
               {format(day, "d")}
             </div>
             <div className="text-xs text-slate-400 uppercase tracking-wider font-medium">
-              {format(day, "MMM")}
+              {format(day, "MMM", { locale: ru })}
             </div>
           </div>
+
           <div>
-            <div className="font-semibold text-slate-700">
-              {format(day, "EEEE")}
+            <div className="font-semibold text-slate-700 capitalize">
+              {format(day, "EEEE", { locale: ru })}
             </div>
+
             {weekend && (
               <span className="inline-block text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-semibold mt-0.5">
-                Weekend
+                Выходной
               </span>
             )}
           </div>
         </div>
 
-        {/* Child dots */}
         {children.length > 0 && (
           <div className="flex items-center gap-1.5">
             {children.map((child) => (
               <div
                 key={child}
-                className={`w-3 h-3 rounded-full ${CHILD_COLORS[child as Child].dot}`}
+                className={`w-3 h-3 rounded-full ${
+                  CHILD_COLORS[child as Child].dot
+                }`}
                 title={child}
               />
             ))}
@@ -67,15 +77,16 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
         )}
       </div>
 
-      {/* Slots */}
       <div className="px-4 py-3 space-y-4">
         {SLOTS.map((slot) => {
-          const slotEvents = events.filter((e) => e.slot === slot);
+          const slotEvents = events.filter((event) => event.slot === slot);
+
           return (
             <div key={slot}>
               <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">
                 {SLOT_LABELS[slot]}
               </div>
+
               <div className="space-y-2">
                 {slotEvents.map((event) => (
                   <ActivityCard
@@ -85,6 +96,7 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
                     onDelete={onDelete}
                   />
                 ))}
+
                 <button
                   onClick={() => onAdd(day, slot)}
                   className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 rounded-xl py-2.5 transition group"
@@ -93,7 +105,7 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
                     size={12}
                     className="group-hover:scale-125 transition-transform"
                   />
-                  Add activity
+                  Добавить мероприятие
                 </button>
               </div>
             </div>
