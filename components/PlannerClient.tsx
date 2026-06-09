@@ -249,7 +249,7 @@ async function handleEditTask(id: string, title: string) {
               <h1 className="font-bold text-slate-800 text-base leading-tight">
                 Семейный календарь
               </h1>
-              <p className="text-xs text-slate-400">June 22 – July 20, 2025</p>
+              <p className="text-xs text-slate-400">22 июня – 20 июля 2026</p>
             </div>
           </div>
 
