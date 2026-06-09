@@ -8,7 +8,6 @@ import { DayCard } from "./DayCard";
 import { TaskPanel } from "./TaskPanel";
 import { FilterBar, type FilterValue } from "./FilterBar";
 import { EventModal } from "./EventModal";
-import { PlanningPanel } from "./PlanningPanel";
 import { format } from "date-fns"; 
 import { ru } from "date-fns/locale";
 import { Sun } from "lucide-react";
@@ -317,29 +316,26 @@ async function handleEditTask(id: string, title: string) {
               </section>
             ))}
           </div>
-
-          <aside className="w-80 shrink-0 hidden lg:flex flex-col gap-4 sticky top-20">
-            <TaskPanel
-              tasks={tasks}
-              onToggle={handleToggleTask}
-              onAdd={handleAddTask}
-              onDelete={handleDeleteTask}
-              onEdit={handleEditTask}
-            />
-            <PlanningPanel />
-          </aside>
+<aside className="w-80 shrink-0 hidden lg:flex flex-col gap-4 sticky top-20">
+  <TaskPanel
+    tasks={tasks}
+    onToggle={handleToggleTask}
+    onAdd={handleAddTask}
+    onDelete={handleDeleteTask}
+    onEdit={handleEditTask}
+  />
+</aside>
         </div>
 
-        <div className="lg:hidden mt-8 space-y-4">
-          <TaskPanel
-            tasks={tasks}
-            onToggle={handleToggleTask}
-            onAdd={handleAddTask}
-            onDelete={handleDeleteTask}
-            onEdit={handleEditTask}
-          />
-          <PlanningPanel />
-        </div>
+       <div className="lg:hidden mt-8 space-y-4">
+  <TaskPanel
+    tasks={tasks}
+    onToggle={handleToggleTask}
+    onAdd={handleAddTask}
+    onDelete={handleDeleteTask}
+    onEdit={handleEditTask}
+  />
+</div>
       </div>
 
       {modalOpen && (
