@@ -123,33 +123,117 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
     setEditingEvent(event);
     setModalOpen(true);
   }
+async function handleSaveEvent(data: Partial<CalendarEvent>) {
+  if (editingEvent) {
+    const { data: updatedEvent, error } = await supabase
+      .from("events")
+      .update(data)
+      .eq("id", editingEvent.id)
+      .select()
+      .single();
 
-  async function handleSaveEvent(data: Partial<CalendarEvent>) {
-    if (editingEvent) {
-      await supabase.from("events").update(data).eq("id", editingEvent.id);
-    } else {
-      await supabase.from("events").insert(data);
+    if (error) {
+      alert(`Ошибка сохранения мероприятия: ${error.message}`);
+      return;
     }
+
+    setEvents((prev) =>
+      prev.map((event) =>
+        event.id === editingEvent.id ? (updatedEvent as CalendarEvent) : event
+      )
+    );
+  } else {
+    const { data: newEvent, error } = await supabase
+      .from("events")
+      .insert(data)
+      .select()
+      .single();
+
+    if (error) {
+      alert(`Ошибка добавления мероприятия: ${error.message}`);
+      return;
+    }
+
+    setEvents((prev) => [...prev, newEvent as CalendarEvent]);
   }
 
-  async function handleDeleteEvent(id: string) {
-    if (!window.confirm("Delete this activity?")) return;
-    await supabase.from("events").delete().eq("id", id);
+  setModalOpen(false);
+}
+
+async function handleDeleteEvent(id: string) {
+  if (!window.confirm("Удалить это мероприятие?")) return;
+
+  const { error } = await supabase.from("events").delete().eq("id", id);
+
+  if (error) {
+    alert(`Ошибка удаления мероприятия: ${error.message}`);
+    return;
   }
 
-  async function handleToggleTask(id: string, completed: boolean) {
-    await supabase.from("tasks").update({ completed }).eq("id", id);
+  setEvents((prev) => prev.filter((event) => event.id !== id));
+}
+
+async function handleToggleTask(id: string, completed: boolean) {
+  const { data: updatedTask, error } = await supabase
+    .from("tasks")
+    .update({ completed })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    alert(`Ошибка обновления задачи: ${error.message}`);
+    return;
   }
 
-  async function handleAddTask(title: string) {
-    await supabase.from("tasks").insert({ title });
+  setTasks((prev) =>
+    prev.map((task) => (task.id === id ? (updatedTask as Task) : task))
+  );
+}
+
+async function handleAddTask(title: string) {
+  const { data: newTask, error } = await supabase
+    .from("tasks")
+    .insert({ title, completed: false })
+    .select()
+    .single();
+
+  if (error) {
+    alert(`Ошибка добавления задачи: ${error.message}`);
+    return;
   }
 
-  async function handleDeleteTask(id: string) {
-    await supabase.from("tasks").delete().eq("id", id);
+  setTasks((prev) => [...prev, newTask as Task]);
+}
+
+async function handleDeleteTask(id: string) {
+  const { error } = await supabase.from("tasks").delete().eq("id", id);
+
+  if (error) {
+    alert(`Ошибка удаления задачи: ${error.message}`);
+    return;
   }
 
-  async function handleEditTask(id: string, title: string) {
+  setTasks((prev) => prev.filter((task) => task.id !== id));
+}
+
+async function handleEditTask(id: string, title: string) {
+  const { data: updatedTask, error } = await supabase
+    .from("tasks")
+    .update({ title })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    alert(`Ошибка редактирования задачи: ${error.message}`);
+    return;
+  }
+
+  setTasks((prev) =>
+    prev.map((task) => (task.id === id ? (updatedTask as Task) : task))
+  );
+}
     await supabase.from("tasks").update({ title }).eq("id", id);
   }
 
