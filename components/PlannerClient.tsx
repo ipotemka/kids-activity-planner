@@ -174,12 +174,10 @@ async function handleDeleteEvent(id: string) {
 }
 
 async function handleToggleTask(id: string, completed: boolean) {
-  const { data: updatedTask, error } = await supabase
+  const { error } = await supabase
     .from("tasks")
     .update({ completed })
-    .eq("id", id)
-    .select()
-    .single();
+    .eq("id", id);
 
   if (error) {
     alert(`Ошибка обновления задачи: ${error.message}`);
@@ -187,7 +185,7 @@ async function handleToggleTask(id: string, completed: boolean) {
   }
 
   setTasks((prev) =>
-    prev.map((task) => (task.id === id ? (updatedTask as Task) : task))
+    prev.map((task) => (task.id === id ? { ...task, completed } : task))
   );
 }
 
