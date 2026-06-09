@@ -2,12 +2,12 @@
   "name": "kids-activity-planner",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-"start": "node .next/standalone/server.js"
-    "lint": "next lint"
-  },
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "node .next/standalone/server.js",
+  "lint": "next lint"
+},
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.4",
