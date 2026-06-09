@@ -190,6 +190,23 @@ async function handleToggleTask(id: string, completed: boolean) {
 }
 
 async function handleAddTask(title: string) {
+  const { data, error } = await supabase
+    .from("tasks")
+    .insert({ title, completed: false })
+    .select();
+
+  if (error) {
+    alert(`Ошибка добавления задачи: ${error.message}`);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert("Задача не сохранилась в базе: Supabase не вернул новую запись.");
+    return;
+  }
+
+  setTasks((prev) => [...prev, data[0] as Task]);
+} {
   const { data: newTask, error } = await supabase
     .from("tasks")
     .insert({ title, completed: false })
