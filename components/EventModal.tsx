@@ -171,20 +171,24 @@ export function EventModal({
                 type="time"
                 value={form.start_time}
                 onChange={(e) => set("start_time", e.target.value)}
+                step="60"
+                lang="ru-RU"
                 className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-              />
+/>
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">
                 Время окончания
               </label>
-              <input
-                type="time"
-                value={form.end_time}
-                onChange={(e) => set("end_time", e.target.value)}
-                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-              />
+            <input
+  type="time"
+  value={form.end_time}
+  onChange={(e) => set("end_time", e.target.value)}
+  step="60"
+  lang="ru-RU"
+  className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+/>
             </div>
           </div>
 
