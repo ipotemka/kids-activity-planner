@@ -79,14 +79,14 @@ export const CHILD_COLORS: Record<
     badge: "bg-green-100 text-green-800",
     dot: "bg-green-500",
   },
-    All: {
-    bg: "bg-slate-500",
-    text: "text-slate-700",
-    border: "border-slate-300",
-    light: "bg-slate-50",
-    badge: "bg-slate-100 text-slate-800",
-    dot: "bg-slate-500",
-  },
+   All: {
+  bg: "bg-amber-500",
+  text: "text-amber-700",
+  border: "border-amber-300",
+  light: "bg-amber-50",
+  badge: "bg-amber-100 text-amber-800",
+  dot: "bg-amber-500",
+},
     SashaVenya: {
     bg: "bg-indigo-500",
     text: "text-indigo-700",
