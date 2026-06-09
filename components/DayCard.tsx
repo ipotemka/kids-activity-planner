@@ -8,7 +8,7 @@ import {
   SLOT_LABELS,
 } from "@/lib/types";
 import { ActivityCard } from "./ActivityCard";
-import { format, isWeekend } from "date-fns";
+import { format, isWeekend, isSameDay } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Plus } from "lucide-react";
 
@@ -24,32 +24,39 @@ interface Props {
 
 export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
   const weekend = isWeekend(day);
+
   const today = new Date();
-today.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
-const cardDay = new Date(day);
-cardDay.setHours(0, 0, 0, 0);
+  const cardDay = new Date(day);
+  cardDay.setHours(0, 0, 0, 0);
 
-const isPast = cardDay < today;
-  const children = Array.from(new Set(events.map((e) => e.child)));
+  const isPast = cardDay < today;
+  const isToday = isSameDay(cardDay, today);
+
+  const children = Array.from(new Set(events.map((event) => event.child)));
 
   return (
-   <div
-  className={`px-5 py-3 flex items-center justify-between ${
-    isPast
-      ? "bg-slate-200"
-      : weekend
-        ? "bg-amber-50"
-        : "bg-slate-50/80"
-  }`}
-        weekend
+    <div
+      className={`rounded-2xl border overflow-hidden shadow-sm transition-shadow hover:shadow-md ${
+        isPast
+          ? "border-slate-200 bg-slate-100 opacity-60"
+          : isToday
+          ? "border-blue-300 bg-blue-50/30 ring-2 ring-blue-200"
+          : weekend
           ? "border-amber-200 bg-amber-50/30"
           : "border-slate-100 bg-white"
       }`}
     >
       <div
         className={`px-5 py-3 flex items-center justify-between ${
-          weekend ? "bg-amber-50" : "bg-slate-50/80"
+          isPast
+            ? "bg-slate-200"
+            : isToday
+            ? "bg-blue-50"
+            : weekend
+            ? "bg-amber-50"
+            : "bg-slate-50/80"
         }`}
       >
         <div className="flex items-center gap-4">
@@ -67,11 +74,25 @@ const isPast = cardDay < today;
               {format(day, "EEEE", { locale: ru })}
             </div>
 
-            {weekend && (
-              <span className="inline-block text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-semibold mt-0.5">
-                Выходной
-              </span>
-            )}
+            <div className="flex gap-1 mt-0.5">
+              {isToday && (
+                <span className="inline-block text-xs bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full font-semibold">
+                  Сегодня
+                </span>
+              )}
+
+              {weekend && (
+                <span className="inline-block text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-semibold">
+                  Выходной
+                </span>
+              )}
+
+              {isPast && (
+                <span className="inline-block text-xs bg-slate-300 text-slate-700 px-2 py-0.5 rounded-full font-semibold">
+                  Прошло
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
