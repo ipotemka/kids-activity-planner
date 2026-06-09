@@ -1,4 +1,4 @@
-export type Child = "Venya" | "Sasha" | "Gavr";
+export type Child = "Venya" | "Sasha" | "Gavr" | "All";
 export type EventSlot = "daytime" | "after-camp" | "evening";
 export type EventType =
   | "Camp"
@@ -76,6 +76,14 @@ export const CHILD_COLORS: Record<
     light: "bg-green-50",
     badge: "bg-green-100 text-green-800",
     dot: "bg-green-500",
+  },
+    All: {
+    bg: "bg-slate-500",
+    text: "text-slate-700",
+    border: "border-slate-300",
+    light: "bg-slate-50",
+    badge: "bg-slate-100 text-slate-800",
+    dot: "bg-slate-500",
   },
 };
 
