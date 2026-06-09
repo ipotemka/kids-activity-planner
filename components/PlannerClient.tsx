@@ -9,7 +9,8 @@ import { TaskPanel } from "./TaskPanel";
 import { FilterBar } from "./FilterBar";
 import { EventModal } from "./EventModal";
 import { PlanningPanel } from "./PlanningPanel";
-import { format } from "date-fns";
+import { format } from "date-fns"; 
+import { ru } from "date-fns/locale";
 import { Sun } from "lucide-react";
 
 interface Props {
@@ -287,8 +288,8 @@ async function handleEditTask(id: string, title: string) {
                   </h2>
                   <div className="flex-1 h-px bg-slate-200" />
                   <span className="text-xs text-slate-400 whitespace-nowrap">
-                    {format(week[0], "MMM d")} –{" "}
-                    {format(week[week.length - 1], "MMM d")}
+                   {format(week[0], "d MMM", { locale: ru })} –{" "}
+                    {format(week[week.length - 1], "d MMM", { locale: ru })}
                   </span>
                 </div>
 
