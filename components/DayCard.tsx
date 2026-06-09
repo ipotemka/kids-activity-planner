@@ -24,11 +24,24 @@ interface Props {
 
 export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
   const weekend = isWeekend(day);
+  const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const cardDay = new Date(day);
+cardDay.setHours(0, 0, 0, 0);
+
+const isPast = cardDay < today;
   const children = Array.from(new Set(events.map((e) => e.child)));
 
   return (
-    <div
-      className={`rounded-2xl border overflow-hidden shadow-sm transition-shadow hover:shadow-md ${
+   <div
+  className={`px-5 py-3 flex items-center justify-between ${
+    isPast
+      ? "bg-slate-200"
+      : weekend
+        ? "bg-amber-50"
+        : "bg-slate-50/80"
+  }`}
         weekend
           ? "border-amber-200 bg-amber-50/30"
           : "border-slate-100 bg-white"
