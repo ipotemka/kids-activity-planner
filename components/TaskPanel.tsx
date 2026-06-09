@@ -54,7 +54,7 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <ClipboardList size={18} className="text-slate-500" />
-            <h2 className="font-bold text-slate-800">Family Tasks</h2>
+            <h2 className="font-bold text-slate-800">Семейные задачи</h2>
           </div>
           <span className="text-xs text-slate-400 font-medium">
             {done}/{tasks.length}
@@ -143,7 +143,7 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
         ))}
         {tasks.length === 0 && (
           <p className="text-sm text-slate-400 text-center py-6">
-            No tasks yet — add one below
+            Пока нет задач — добавьте первую ниже
           </p>
         )}
       </div>
@@ -154,7 +154,7 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
           <input
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
-            placeholder="Add a family task…"
+            placeholder="Добавить задачу…"
             className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
           />
           <button
