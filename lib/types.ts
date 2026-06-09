@@ -1,14 +1,16 @@
 export type Child = "Venya" | "Sasha" | "Gavr" | "All";
 export type EventSlot = "daytime" | "after-camp" | "evening";
 export type EventType =
-  | "Camp"
-  | "Class"
-  | "Sports"
-  | "Arts"
-  | "Workshop"
-  | "Performance"
-  | "Evening Event"
-  | "Other";
+  | "Лагерь"
+  | "Занятие"
+  | "Спорт"
+  | "Творчество"
+  | "Мастер-класс"
+  | "Выступление"
+  | "Театр"
+  | "Музей"
+  | "Вечернее мероприятие"
+  | "Другое";
 export type UserRole = "Admin" | "Parent" | "Family Member";
 
 export interface CalendarEvent {
@@ -88,27 +90,29 @@ export const CHILD_COLORS: Record<
 };
 
 export const TRANSPORT_OPTIONS = [
-  "Mom",
-  "Dad",
-  "Grandmother",
-  "Nanny",
-  "Carpool",
-  "TBD",
+  "Ира",
+  "Дима",
+  "Ира+Дима на машине",
+  "Марина",
+  "Лариса",
+  "Марина+Лариса",
 ];
 
 export const EVENT_TYPES: EventType[] = [
-  "Camp",
-  "Class",
-  "Sports",
-  "Arts",
-  "Workshop",
-  "Performance",
-  "Evening Event",
-  "Other",
+  "Лагерь",
+  "Занятие",
+  "Спорт",
+  "Творчество",
+  "Мастер-класс",
+  "Выступление",
+  "Театр",
+  "Музей",
+  "Вечернее мероприятие",
+  "Другое",
 ];
 
 export const SLOT_LABELS: Record<EventSlot, string> = {
-  daytime: "Daytime / Camp",
-  "after-camp": "After-Camp",
-  evening: "Evening",
+  daytime: "День",
+  "after-camp": "После лагеря",
+  evening: "Вечер",
 };
