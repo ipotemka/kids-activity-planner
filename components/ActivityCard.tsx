@@ -17,8 +17,8 @@ export function ActivityCard({ event, onEdit, onDelete }: Props) {
 
   return (
     <div
-      className={`rounded-xl bg-white shadow-sm p-3 group relative border-l-[3px] ${c.border}`}
-    >
+className={`rounded-xl bg-white shadow-sm p-3 group relative border-l-4 ${c.dot.replace("bg-", "border-l-")}`}
+      >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
