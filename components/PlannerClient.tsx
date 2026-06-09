@@ -283,7 +283,7 @@ async function handleEditTask(id: string, title: string) {
               <section key={weekIndex}>
                 <div className="flex items-center gap-3 mb-4">
                   <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">
-                    Week {weekIndex + 1}
+                    Неделя {weekIndex + 1}
                   </h2>
                   <div className="flex-1 h-px bg-slate-200" />
                   <span className="text-xs text-slate-400 whitespace-nowrap">
