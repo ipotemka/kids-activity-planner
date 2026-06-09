@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { PlannerClient } from "@/components/PlannerClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   const supabase = createClient();
 
