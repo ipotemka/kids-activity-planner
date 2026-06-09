@@ -1,4 +1,4 @@
-export type Child = "Venya" | "Sasha" | "Gavr" | "All";
+export type Child = "Venya" | "Sasha" | "Gavr" | "All" | "SashaVenya";
 export type EventSlot = "daytime" | "after-camp" | "evening";
 export type EventType =
   | "Лагерь"
@@ -86,6 +86,14 @@ export const CHILD_COLORS: Record<
     light: "bg-slate-50",
     badge: "bg-slate-100 text-slate-800",
     dot: "bg-slate-500",
+  },
+    SashaVenya: {
+    bg: "bg-indigo-500",
+    text: "text-indigo-700",
+    border: "border-indigo-300",
+    light: "bg-indigo-50",
+    badge: "bg-indigo-100 text-indigo-800",
+    dot: "bg-indigo-500",
   },
 };
 
