@@ -97,6 +97,7 @@ export function EventModal({
                 <option value="Venya">Веня</option>
                 <option value="Sasha">Саша</option>
                 <option value="Gavr">Гавр</option>
+                <option value="SashaVenya">Саша + Веня</option>
                 <option value="All">Все дети</option>
               </select>
             </div>
