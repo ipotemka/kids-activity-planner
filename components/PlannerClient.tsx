@@ -233,8 +233,7 @@ async function handleEditTask(id: string, title: string) {
   setTasks((prev) =>
     prev.map((task) => (task.id === id ? (updatedTask as Task) : task))
   );
-}
-    await supabase.from("tasks").update({ title }).eq("id", id);
+
   }
 
   return (
