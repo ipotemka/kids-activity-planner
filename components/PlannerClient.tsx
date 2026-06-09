@@ -246,7 +246,7 @@ async function handleEditTask(id: string, title: string) {
             <Sun size={22} className="text-yellow-400 shrink-0" />
             <div>
               <h1 className="font-bold text-slate-800 text-base leading-tight">
-                Family Summer Planner
+                Семейный календарь
               </h1>
               <p className="text-xs text-slate-400">June 22 – July 20, 2025</p>
             </div>
@@ -255,15 +255,15 @@ async function handleEditTask(id: string, title: string) {
           <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500">
             <span className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" />
-              Venya
+              Веня
             </span>
             <span className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" />
-              Sasha
+              Саша
             </span>
             <span className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" />
-              Gavr
+              Гавр
             </span>
           </div>
         </div>
