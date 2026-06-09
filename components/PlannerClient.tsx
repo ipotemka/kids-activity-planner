@@ -6,7 +6,6 @@ import { getAllDays, groupByWeek, isEventOnDay } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/client";
 import { DayCard } from "./DayCard";
 import { TaskPanel } from "./TaskPanel";
-import { FilterBar, type FilterValue } from "./FilterBar";
 import { EventModal } from "./EventModal";
 import { format } from "date-fns"; 
 import { ru } from "date-fns/locale";
@@ -20,8 +19,6 @@ interface Props {
 export function PlannerClient({ initialEvents, initialTasks }: Props) {
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [filter, setFilter] = useState<FilterValue>("ALL_EVENTS");
-  const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
   const [defaultDate, setDefaultDate] = useState<Date | undefined>();
@@ -90,32 +87,7 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
     };
   }, [supabase]);
 
-  const filteredEvents = events.filter((event) => {
-  const filterMap: Record<FilterValue, string[]> = {
-    ALL_EVENTS: ["Venya", "Sasha", "Gavr", "All"],
-    Venya: ["Venya", "All"],
-    Sasha: ["Sasha", "All"],
-    Gavr: ["Gavr", "All"],
-    VenyaSasha: ["Venya", "Sasha", "All"],
-    VenyaGavr: ["Venya", "Gavr", "All"],
-    SashaGavr: ["Sasha", "Gavr", "All"],
-    All: ["All"],
-  };
-
-  if (!filterMap[filter].includes(event.child)) return false;
-
-    if (search) {
-      const query = search.toLowerCase();
-
-      return (
-        event.title.toLowerCase().includes(query) ||
-        event.child.toLowerCase().includes(query) ||
-        (event.location ?? "").toLowerCase().includes(query)
-      );
-    }
-
-    return true;
-  });
+  const filteredEvents = events;
 
   function getEventsForDay(day: Date) {
     return filteredEvents.filter((event) => isEventOnDay(event, day));
@@ -279,13 +251,6 @@ async function handleEditTask(id: string, title: string) {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        <FilterBar
-          filter={filter}
-          search={search}
-          onFilterChange={setFilter}
-          onSearchChange={setSearch}
-        />
-
         <div className="flex gap-6 items-start">
           <div className="flex-1 min-w-0 space-y-8">
             {weeks.map((week, weekIndex) => (
