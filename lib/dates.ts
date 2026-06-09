@@ -1,7 +1,7 @@
 import { eachDayOfInterval, parseISO } from "date-fns";
 
-export const PLANNER_START = new Date(2025, 5, 22); // June 22
-export const PLANNER_END = new Date(2025, 6, 20);   // July 20
+export const PLANNER_START = new Date(2026, 5, 22); // June 22
+export const PLANNER_END = new Date(2026, 6, 20);   // July 20
 
 export function getAllDays(): Date[] {
   return eachDayOfInterval({ start: PLANNER_START, end: PLANNER_END });
