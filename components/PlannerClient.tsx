@@ -6,7 +6,7 @@ import { getAllDays, groupByWeek, isEventOnDay } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/client";
 import { DayCard } from "./DayCard";
 import { TaskPanel } from "./TaskPanel";
-import { FilterBar } from "./FilterBar";
+import { FilterBar, type FilterValue } from "./FilterBar";
 import { EventModal } from "./EventModal";
 import { PlanningPanel } from "./PlanningPanel";
 import { format } from "date-fns"; 
@@ -18,12 +18,10 @@ interface Props {
   initialTasks: Task[];
 }
 
-type FilterChild = Child | "All";
-
 export function PlannerClient({ initialEvents, initialTasks }: Props) {
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [filter, setFilter] = useState<FilterChild>("All");
+  const [filter, setFilter] = useState<FilterValue>("ALL_EVENTS");
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
@@ -94,7 +92,18 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
   }, [supabase]);
 
   const filteredEvents = events.filter((event) => {
-    if (filter !== "All" && event.child !== filter) return false;
+  const filterMap: Record<FilterValue, string[]> = {
+    ALL_EVENTS: ["Venya", "Sasha", "Gavr", "All"],
+    Venya: ["Venya", "All"],
+    Sasha: ["Sasha", "All"],
+    Gavr: ["Gavr", "All"],
+    VenyaSasha: ["Venya", "Sasha", "All"],
+    VenyaGavr: ["Venya", "Gavr", "All"],
+    SashaGavr: ["Sasha", "Gavr", "All"],
+    All: ["All"],
+  };
+
+  if (!filterMap[filter].includes(event.child)) return false;
 
     if (search) {
       const query = search.toLowerCase();
