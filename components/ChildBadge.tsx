@@ -4,6 +4,7 @@ const LABELS: Record<Child, string> = {
   Venya: "Веня",
   Sasha: "Саша",
   Gavr: "Гавр",
+  SashaVenya: "САША + ВЕНЯ",
   All: "Все дети",
 };
 
