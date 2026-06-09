@@ -9,8 +9,7 @@ import { FilterBar } from "./FilterBar";
 import { EventModal } from "./EventModal";
 import { PlanningPanel } from "./PlanningPanel";
 import { format } from "date-fns";
-import { Sun, LogOut, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Sun } from "lucide-react";
 
 interface User {
   id: string;
@@ -21,12 +20,11 @@ interface User {
 interface Props {
   initialEvents: CalendarEvent[];
   initialTasks: Task[];
-  user: User;
 }
 
 type FilterChild = Child | "All";
 
-export function PlannerClient({ initialEvents, initialTasks, user }: Props) {
+export function PlannerClient({ initialEvents, initialTasks }: Props)
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [filter, setFilter] = useState<FilterChild>("All");
@@ -162,11 +160,6 @@ export function PlannerClient({ initialEvents, initialTasks, user }: Props) {
       .eq("id", id);
   }
 
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.push("/login");
-  }
-
   return (
     <div className="min-h-screen bg-slate-50">
       {/* ── Header ── */}
@@ -198,22 +191,6 @@ export function PlannerClient({ initialEvents, initialTasks, user }: Props) {
                 Gavr
               </span>
             </div>
-
-            <div className="flex items-center gap-2 pl-3 border-l border-slate-100">
-              <Users size={14} className="text-slate-400 hidden sm:block" />
-              <span className="text-sm text-slate-600 hidden sm:block max-w-[140px] truncate">
-                {user.name || user.email}
-              </span>
-              <button
-                onClick={handleSignOut}
-                className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition"
-                title="Sign out"
-              >
-                <LogOut size={15} />
-              </button>
-            </div>
-          </div>
-        </div>
       </header>
 
       {/* ── Main layout ── */}
