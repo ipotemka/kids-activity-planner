@@ -205,9 +205,8 @@ async function handleAddTask(title: string) {
     return;
   }
 
-  setTasks((prev) => [...prev, data[0] as Task]);
-} {
-  const { data: newTask, error } = await supabase
+setTasks((prev) => [...prev, data[0] as Task]);
+}
     .from("tasks")
     .insert({ title, completed: false })
     .select()
