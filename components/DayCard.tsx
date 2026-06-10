@@ -105,19 +105,6 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
             ))}
           </div>
         )}
-      </div>
-<div className="px-4 py-3 space-y-2">
-  {[...events]
-    .sort((a, b) => (a.start_time ?? "99:99").localeCompare(b.start_time ?? "99:99"))
-    .map((event) => (
-      <ActivityCard
-        key={event.id}
-        event={event}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
-    ))}
-
   <button
     onClick={() => onAdd(day)}
     className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 rounded-xl py-2.5 transition group"
