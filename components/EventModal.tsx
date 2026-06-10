@@ -81,13 +81,15 @@ async function handleSubmit(e: React.FormEvent) {
     (date, index, arr) => date && arr.indexOf(date) === index
   );
 
-  for (const date of datesToSave) {
-    await onSave({
-      ...form,
-      start_date: date,
-      end_date: date,
-    });
-  }
+  await Promise.all(
+    datesToSave.map((date) =>
+      onSave({
+        ...form,
+        start_date: date,
+        end_date: date,
+      })
+    )
+  );
 
   setSaving(false);
   onClose();
