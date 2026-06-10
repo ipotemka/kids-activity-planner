@@ -36,8 +36,8 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
         (payload) => {
           if (payload.eventType === "INSERT") {
             setEvents((prev) => [...prev, payload.new as CalendarEvent]);
-          }
-
+            }
+          
           if (payload.eventType === "UPDATE") {
             setEvents((prev) =>
               prev.map((event) =>
@@ -133,9 +133,9 @@ async function handleSaveEvent(data: Partial<CalendarEvent>) {
       alert(`Ошибка добавления мероприятия: ${error.message}`);
       return;
     }
-
-    setEvents((prev) => [...prev, newEvent as CalendarEvent]);
+setEvents((prev) => [...prev, newEvent as CalendarEvent]);
   }
+}
 
 async function handleDeleteEvent(id: string) {
   if (!window.confirm("Удалить это мероприятие?")) return;
