@@ -92,13 +92,12 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
   function getEventsForDay(day: Date) {
     return filteredEvents.filter((event) => isEventOnDay(event, day));
   }
-
-  function openAdd(day: Date, slot: EventSlot) {
-    setEditingEvent(null);
-    setDefaultDate(day);
-    setDefaultSlot(slot);
-    setModalOpen(true);
-  }
+function openAdd(day: Date) {
+  setEditingEvent(null);
+  setDefaultDate(day);
+  setDefaultSlot("daytime");
+  setModalOpen(true);
+}
 
   function openEdit(event: CalendarEvent) {
     setEditingEvent(event);
