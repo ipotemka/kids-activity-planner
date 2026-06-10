@@ -2,22 +2,18 @@
 
 import {
   CalendarEvent,
-  EventSlot,
   Child,
   CHILD_COLORS,
-  SLOT_LABELS,
 } from "@/lib/types";
 import { ActivityCard } from "./ActivityCard";
 import { format, isWeekend, isSameDay } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Plus } from "lucide-react";
 
-const SLOTS: EventSlot[] = ["daytime", "after-camp", "evening"];
-
 interface Props {
   day: Date;
   events: CalendarEvent[];
-  onAdd: (day: Date, slot: EventSlot) => void;
+  onAdd: (day: Date) => void;
   onEdit: (event: CalendarEvent) => void;
   onDelete: (id: string) => void;
 }
@@ -110,17 +106,26 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
           </div>
         )}
       </div>
+<div className="px-4 py-3 space-y-2">
+  {[...events]
+    .sort((a, b) => (a.start_time ?? "99:99").localeCompare(b.start_time ?? "99:99"))
+    .map((event) => (
+      <ActivityCard
+        key={event.id}
+        event={event}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    ))}
 
-      <div className="px-4 py-3 space-y-4">
-        {SLOTS.map((slot) => {
-          const slotEvents = events.filter((event) => event.slot === slot);
-
-          return (
-            <div key={slot}>
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">
-                {SLOT_LABELS[slot]}
-              </div>
-
+  <button
+    onClick={() => onAdd(day)}
+    className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 rounded-xl py-2.5 transition group"
+  >
+    <Plus size={12} className="group-hover:scale-125 transition-transform" />
+    Добавить мероприятие
+  </button>
+</div>
               <div className="space-y-2">
                 {slotEvents.map((event) => (
                   <ActivityCard
