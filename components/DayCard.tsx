@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CalendarEvent,
-  Child,
-  CHILD_COLORS,
-} from "@/lib/types";
+import { CalendarEvent, Child, CHILD_COLORS } from "@/lib/types";
 import { ActivityCard } from "./ActivityCard";
 import { format, isWeekend, isSameDay } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -31,6 +27,10 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
   const isToday = isSameDay(cardDay, today);
 
   const children = Array.from(new Set(events.map((event) => event.child)));
+
+  const sortedEvents = [...events].sort((a, b) =>
+    (a.start_time ?? "99:99").localeCompare(b.start_time ?? "99:99")
+  );
 
   return (
     <div
@@ -60,6 +60,7 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
             <div className="text-3xl font-black text-slate-800 leading-none">
               {format(day, "d")}
             </div>
+
             <div className="text-xs text-slate-400 uppercase tracking-wider font-medium">
               {format(day, "MMM", { locale: ru })}
             </div>
@@ -105,38 +106,28 @@ export function DayCard({ day, events, onAdd, onEdit, onDelete }: Props) {
             ))}
           </div>
         )}
-  <button
-    onClick={() => onAdd(day)}
-    className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 rounded-xl py-2.5 transition group"
-  >
-    <Plus size={12} className="group-hover:scale-125 transition-transform" />
-    Добавить мероприятие
-  </button>
-</div>
-              <div className="space-y-2">
-                {slotEvents.map((event) => (
-                  <ActivityCard
-                    key={event.id}
-                    event={event}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                  />
-                ))}
+      </div>
 
-                <button
-                  onClick={() => onAdd(day, slot)}
-                  className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 rounded-xl py-2.5 transition group"
-                >
-                  <Plus
-                    size={12}
-                    className="group-hover:scale-125 transition-transform"
-                  />
-                  Добавить мероприятие
-                </button>
-              </div>
-            </div>
-          );
-        })}
+      <div className="px-4 py-3 space-y-2">
+        {sortedEvents.map((event) => (
+          <ActivityCard
+            key={event.id}
+            event={event}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ))}
+
+        <button
+          onClick={() => onAdd(day)}
+          className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 rounded-xl py-2.5 transition group"
+        >
+          <Plus
+            size={12}
+            className="group-hover:scale-125 transition-transform"
+          />
+          Добавить мероприятие
+        </button>
       </div>
     </div>
   );
