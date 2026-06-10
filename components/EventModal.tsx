@@ -75,12 +75,13 @@ function removeExtraDate(index: number) {
 
 async function handleSubmit(e: React.FormEvent) {
   e.preventDefault();
-
   setSaving(true);
 
-  await onSave(form);
+  const datesToSave = [form.start_date, ...extraDates].filter(
+    (date, index, arr) => date && arr.indexOf(date) === index
+  );
 
-  for (const date of extraDates) {
+  for (const date of datesToSave) {
     await onSave({
       ...form,
       start_date: date,
