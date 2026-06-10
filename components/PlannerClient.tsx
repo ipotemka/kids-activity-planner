@@ -137,9 +137,6 @@ async function handleSaveEvent(data: Partial<CalendarEvent>) {
     setEvents((prev) => [...prev, newEvent as CalendarEvent]);
   }
 
-  setModalOpen(false);
-}
-
 async function handleDeleteEvent(id: string) {
   if (!window.confirm("Удалить это мероприятие?")) return;
 
