@@ -99,9 +99,13 @@ export function ActivityCard({ event, onEdit, onDelete }: Props) {
             </div>
           </div>
 
-          {event.notes && (
-            <p className="text-xs text-slate-400 italic mt-1.5">{event.notes}</p>
-          )}
+        {event.notes && (
+  <div className="mt-2 px-2.5 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+    <p className="text-xs text-amber-900">
+      {event.notes}
+    </p>
+  </div>
+)}
         </div>
 
         {/* Action buttons */}
