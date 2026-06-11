@@ -132,8 +132,11 @@ export const CHILD_DISPLAY_NAMES: Record<Child, string> = {
   Venya: "Веня",
   Sasha: "Саша",
   Gavr: "Гавр",
+  All: "Все дети",
+  SashaVenya: "Веня + Саша",
+  Ira: "Ира",
+  Dima: "Дима",
 };
-
 // Russian display labels — DB values stay English (matches CHECK constraint)
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   Camp: "Лагерь",
