@@ -176,4 +176,58 @@ export function PlannerClient({ initialEvents, initialTasks }: Props) {
                     Неделя {wi + 1}
                   </h2>
                   <div className="flex-1 h-px bg-slate-200" />
-                  <
+                  <span className="text-xs text-slate-400 whitespace-nowrap">
+                    {format(week[0], "d MMM", { locale: ru })} –{" "}
+                    {format(week[week.length - 1], "d MMM", { locale: ru })}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  {week.map((day) => (
+                    <DayCard
+                      key={day.toISOString()}
+                      day={day}
+                      events={getEventsForDay(day)}
+                      onAdd={openAdd}
+                      onEdit={openEdit}
+                      onDelete={handleDeleteEvent}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          <aside className="w-80 shrink-0 hidden lg:flex flex-col gap-4 sticky top-20">
+            <TaskPanel
+              tasks={tasks}
+              onToggle={handleToggleTask}
+              onAdd={handleAddTask}
+              onDelete={handleDeleteTask}
+              onEdit={handleEditTask}
+            />
+          </aside>
+        </div>
+
+        <div className="lg:hidden mt-8">
+          <TaskPanel
+            tasks={tasks}
+            onToggle={handleToggleTask}
+            onAdd={handleAddTask}
+            onDelete={handleDeleteTask}
+            onEdit={handleEditTask}
+          />
+        </div>
+      </div>
+
+      {modalOpen && (
+        <EventModal
+          event={editingEvent}
+          defaultDate={defaultDate}
+          defaultSlot={defaultSlot}
+          onSave={handleSaveEvent}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
