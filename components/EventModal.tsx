@@ -253,4 +253,148 @@ export function EventModal({ event, defaultDate, defaultSlot, onSave, onClose }:
                       onChange={(e) => updateExtraDate(i, e.target.value)}
                       min="2026-06-22"
                       max="2026-07-20"
-                      className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ri
+                      className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeExtraDate(i)}
+                      className="text-red-400 hover:text-red-600 text-sm px-2 shrink-0"
+                    >
+                      Удалить
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addExtraDate}
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  + Добавить ещё дату
+                </button>
+              </div>
+
+              {extraDates.length > 0 && (
+                <p className="text-xs text-slate-400 mt-1">
+                  Будет создано {1 + extraDates.length} отдельных записей. Дата окончания игнорируется.
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Times — <select> with HH:mm strings; no browser AM/PM rendering possible */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">
+                Время начала
+              </label>
+              <select
+                value={form.start_time}
+                onChange={(e) => setField("start_time", e.target.value)}
+                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                {timeOptions(form.start_time).map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">
+                Время окончания
+              </label>
+              <select
+                value={form.end_time}
+                onChange={(e) => setField("end_time", e.target.value)}
+                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                {timeOptions(form.end_time).map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block text-xs font-medium text-slate-600 mb-1">
+              Место / адрес
+            </label>
+            <input
+              type="text"
+              value={form.location}
+              onChange={(e) => setField("location", e.target.value)}
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              placeholder="Школа, адрес, название места..."
+            />
+          </div>
+
+          {/* Transport */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">
+                Кто отвозит
+              </label>
+              <select
+                value={form.drop_off}
+                onChange={(e) => setField("drop_off", e.target.value)}
+                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                {TRANSPORT_OPTIONS.map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">
+                Кто забирает
+              </label>
+              <select
+                value={form.pick_up}
+                onChange={(e) => setField("pick_up", e.target.value)}
+                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                {TRANSPORT_OPTIONS.map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div>
+            <label className="block text-xs font-medium text-slate-600 mb-1">
+              Комментарий
+            </label>
+            <textarea
+              value={form.notes}
+              onChange={(e) => setField("notes", e.target.value)}
+              rows={2}
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"
+              placeholder="Любая дополнительная информация..."
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-1">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 border border-slate-200 text-slate-600 font-medium py-2.5 rounded-xl hover:bg-slate-50 transition text-sm"
+            >
+              Отмена
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl transition text-sm disabled:opacity-60"
+            >
+              {saving ? "Сохраняю..." : event ? "Сохранить" : "Добавить"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
