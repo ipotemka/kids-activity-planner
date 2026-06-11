@@ -9,7 +9,6 @@ import {
   EVENT_TYPES,
   EVENT_TYPE_LABELS,
   TRANSPORT_OPTIONS,
-  SLOT_LABELS,
   CHILD_DISPLAY_NAMES,
 } from "@/lib/types";
 import { X } from "lucide-react";
@@ -194,22 +193,6 @@ export function EventModal({ event, defaultDate, defaultSlot, onSave, onClose }:
               className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
               placeholder="Например: лагерь, танцы, скейтбординг..."
             />
-          </div>
-
-          {/* Slot */}
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
-              Слот
-            </label>
-            <select
-              value={form.slot}
-              onChange={(e) => setField("slot", e.target.value as EventSlot)}
-              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            >
-              {(Object.entries(SLOT_LABELS) as [EventSlot, string][]).map(([v, label]) => (
-                <option key={v} value={v}>{label}</option>
-              ))}
-            </select>
           </div>
 
           {/* Date range */}
