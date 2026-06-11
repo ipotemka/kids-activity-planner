@@ -103,7 +103,9 @@ function openAdd(day: Date) {
     setEditingEvent(event);
     setModalOpen(true);
   }
-async function handleSaveEvent(data: Partial<CalendarEvent>) {
+async function handleSaveEvent(
+  data: Partial<CalendarEvent> | Partial<CalendarEvent>[]
+) {
   if (editingEvent) {
     const { data: updatedEvent, error } = await supabase
       .from("events")
@@ -123,33 +125,20 @@ async function handleSaveEvent(data: Partial<CalendarEvent>) {
       )
     );
   } else {
-    const { data: newEvent, error } = await supabase
-      .from("events")
-      .insert(data)
-      .select()
-      .single();
+  const eventsToInsert = Array.isArray(data) ? data : [data];
 
-    if (error) {
-      alert(`Ошибка добавления мероприятия: ${error.message}`);
-      return;
-    }
-setEvents((prev) => [...prev, newEvent as CalendarEvent]);
-  }
-}
-
-async function handleDeleteEvent(id: string) {
-  if (!window.confirm("Удалить это мероприятие?")) return;
-
-  const { error } = await supabase.from("events").delete().eq("id", id);
+  const { data: newEvents, error } = await supabase
+    .from("events")
+    .insert(eventsToInsert)
+    .select();
 
   if (error) {
-    alert(`Ошибка удаления мероприятия: ${error.message}`);
+    alert(`Ошибка добавления мероприятия: ${error.message}`);
     return;
   }
 
-  setEvents((prev) => prev.filter((event) => event.id !== id));
+  setEvents((prev) => [...prev, ...((newEvents ?? []) as CalendarEvent[])]);
 }
-
 async function handleToggleTask(id: string, completed: boolean) {
   const { error } = await supabase
     .from("tasks")
