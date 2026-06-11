@@ -18,7 +18,7 @@ interface Props {
   event?: CalendarEvent | null;
   defaultDate?: Date;
   defaultSlot?: EventSlot;
-  onSave: (data: Partial<CalendarEvent>) => Promise<void>;
+onSave: (data: Partial<CalendarEvent> | Partial<CalendarEvent>[]) => Promise<void>;
   onClose: () => void;
 }
 
@@ -81,15 +81,13 @@ async function handleSubmit(e: React.FormEvent) {
     (date, index, arr) => date && arr.indexOf(date) === index
   );
 
-  await Promise.all(
-    datesToSave.map((date) =>
-      onSave({
-        ...form,
-        start_date: date,
-        end_date: date,
-      })
-    )
-  );
+  const eventsToSave = datesToSave.map((date) => ({
+    ...form,
+    start_date: date,
+    end_date: date,
+  }));
+
+  await onSave(eventsToSave);
 
   setSaving(false);
   onClose();
