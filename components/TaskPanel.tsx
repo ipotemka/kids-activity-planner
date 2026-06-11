@@ -62,9 +62,8 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
           />
         </div>
       </div>
-
-      <div className="px-4 py-3 space-y-1 max-h-72 overflow-y-auto">
-        {tasks.map((task) => (
+<div className="px-4 py-3 space-y-1">
+  {tasks.map((task) => (
           <div
             key={task.id}
             className="flex items-center gap-2 group px-2 py-2 rounded-xl hover:bg-slate-50 transition"
