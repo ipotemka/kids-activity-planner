@@ -1,16 +1,19 @@
-export type Child = "Venya" | "Sasha" | "Gavr" | "All" | "SashaVenya";
+// Child: the 3 values the DB CHECK constraint accepts — never add "All" here
+export type Child = "Venya" | "Sasha" | "Gavr";
+
 export type EventSlot = "daytime" | "after-camp" | "evening";
+
+// English values — must match the Postgres CHECK constraint exactly
 export type EventType =
-  | "Лагерь"
-  | "Занятие"
-  | "Спорт"
-  | "Творчество"
-  | "Мастер-класс"
-  | "Выступление"
-  | "Театр"
-  | "Музей"
-  | "Вечернее мероприятие"
-  | "Другое";
+  | "Camp"
+  | "Class"
+  | "Sports"
+  | "Arts"
+  | "Workshop"
+  | "Performance"
+  | "Evening Event"
+  | "Other";
+
 export type UserRole = "Admin" | "Parent" | "Family Member";
 
 export interface CalendarEvent {
@@ -79,25 +82,40 @@ export const CHILD_COLORS: Record<
     badge: "bg-green-100 text-green-800",
     dot: "bg-green-500",
   },
-   All: {
-  bg: "bg-amber-500",
-  text: "text-amber-700",
-  border: "border-amber-300",
-  light: "bg-amber-50",
-  badge: "bg-amber-100 text-amber-800",
-  dot: "bg-amber-500",
-},
-    SashaVenya: {
-    bg: "bg-indigo-500",
-    text: "text-indigo-700",
-    border: "border-indigo-300",
-    light: "bg-indigo-50",
-    badge: "bg-indigo-100 text-indigo-800",
-    dot: "bg-indigo-500",
-  },
 };
 
+// Russian display names — DB values stay as "Venya" / "Sasha" / "Gavr"
+export const CHILD_DISPLAY_NAMES: Record<Child, string> = {
+  Venya: "Веня",
+  Sasha: "Саша",
+  Gavr: "Гавр",
+};
+
+// Russian display labels — DB values stay English (matches CHECK constraint)
+export const EVENT_TYPE_LABELS: Record<EventType, string> = {
+  Camp: "Лагерь",
+  Class: "Занятие",
+  Sports: "Спорт",
+  Arts: "Творчество",
+  Workshop: "Мастер-класс",
+  Performance: "Выступление",
+  "Evening Event": "Вечернее мероприятие",
+  Other: "Другое",
+};
+
+export const EVENT_TYPES: EventType[] = [
+  "Camp",
+  "Class",
+  "Sports",
+  "Arts",
+  "Workshop",
+  "Performance",
+  "Evening Event",
+  "Other",
+];
+
 export const TRANSPORT_OPTIONS = [
+  "Не назначено",
   "Ира",
   "Дима",
   "Ира+Дима на машине",
@@ -106,21 +124,8 @@ export const TRANSPORT_OPTIONS = [
   "Марина+Лариса",
 ];
 
-export const EVENT_TYPES: EventType[] = [
-  "Лагерь",
-  "Занятие",
-  "Спорт",
-  "Творчество",
-  "Мастер-класс",
-  "Выступление",
-  "Театр",
-  "Музей",
-  "Вечернее мероприятие",
-  "Другое",
-];
-
 export const SLOT_LABELS: Record<EventSlot, string> = {
-  daytime: "День",
+  daytime: "День / Лагерь",
   "after-camp": "После лагеря",
   evening: "Вечер",
 };
