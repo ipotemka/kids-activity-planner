@@ -25,8 +25,24 @@ export function ActivityCard({ event, onEdit, onDelete }: Props) {
   const isMultiDay = event.start_date !== event.end_date;
 
   return (
-    <div className={`rounded-xl bg-white shadow-sm p-3 group relative border-l-[3px] ${c.border}`}>
-      <div className="flex items-start justify-between gap-2">
+<div
+  className={`rounded-xl bg-white shadow-sm p-3 group relative border-l-4 ${
+    event.child === "Venya"
+      ? "border-l-blue-500"
+      : event.child === "Sasha"
+      ? "border-l-purple-500"
+      : event.child === "Gavr"
+      ? "border-l-green-500"
+      : event.child === "All"
+      ? "border-l-amber-500"
+      : event.child === "SashaVenya"
+      ? "border-l-indigo-500"
+      : event.child === "Ira"
+      ? "border-l-rose-500"
+      : "border-l-cyan-500"
+  }`}
+>
+  <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
 
           {/* Badge row */}
