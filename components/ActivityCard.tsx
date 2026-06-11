@@ -3,7 +3,7 @@
 import { CalendarEvent, CHILD_COLORS, EVENT_TYPE_LABELS } from "@/lib/types";
 import { ChildBadge } from "./ChildBadge";
 import { MapPin, Clock, Edit2, Trash2 } from "lucide-react";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 
 interface Props {
@@ -122,11 +122,6 @@ export function ActivityCard({ event, onEdit, onDelete }: Props) {
           </button>
         </div>
       </div>
-
-      {/* updated_at — parseISO is correct here: TIMESTAMPTZ includes timezone info */}
-      <p className="text-xs text-slate-300 mt-2">
-        {format(parseISO(event.updated_at), "dd.MM.yyyy HH:mm")}
-      </p>
     </div>
   );
 }
