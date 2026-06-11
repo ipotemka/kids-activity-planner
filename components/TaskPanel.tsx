@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Task } from "@/lib/types";
 import {
@@ -21,17 +22,14 @@ interface Props {
 }
 
 export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
-  const [newTask, setNewTask] = useState("");
+  const [newTask,   setNewTask]   = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
 
   function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     const t = newTask.trim();
-    if (t) {
-      onAdd(t);
-      setNewTask("");
-    }
+    if (t) { onAdd(t); setNewTask(""); }
   }
 
   function startEdit(task: Task) {
@@ -45,22 +43,18 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
   }
 
   const done = tasks.filter((t) => t.completed).length;
-  const pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+  const pct  = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-      {/* Header */}
       <div className="px-5 py-4 border-b border-slate-100">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <ClipboardList size={18} className="text-slate-500" />
-            <h2 className="font-bold text-slate-800">Семейные задачи</h2>
+            <h2 className="font-bold text-slate-800">Задачи</h2>
           </div>
-          <span className="text-xs text-slate-400 font-medium">
-            {done}/{tasks.length}
-          </span>
+          <span className="text-xs text-slate-400 font-medium">{done}/{tasks.length}</span>
         </div>
-        {/* Progress bar */}
         <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-blue-500 rounded-full transition-all duration-500"
@@ -69,8 +63,7 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
         </div>
       </div>
 
-      {/* Task list */}
-      <div className="px-4 py-3 space-y-1">
+      <div className="px-4 py-3 space-y-1 max-h-72 overflow-y-auto">
         {tasks.map((task) => (
           <div
             key={task.id}
@@ -80,11 +73,9 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
               onClick={() => onToggle(task.id, !task.completed)}
               className="shrink-0 text-slate-300 hover:text-blue-500 transition"
             >
-              {task.completed ? (
-                <CheckSquare size={18} className="text-blue-500" />
-              ) : (
-                <Square size={18} />
-              )}
+              {task.completed
+                ? <CheckSquare size={18} className="text-blue-500" />
+                : <Square size={18} />}
             </button>
 
             {editingId === task.id ? (
@@ -93,68 +84,42 @@ export function TaskPanel({ tasks, onToggle, onAdd, onDelete, onEdit }: Props) {
                   value={editValue}
                   onChange={(e) => setEditValue(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") saveEdit(task.id);
+                    if (e.key === "Enter")  saveEdit(task.id);
                     if (e.key === "Escape") setEditingId(null);
                   }}
                   className="flex-1 border border-blue-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   autoFocus
                 />
-                <button
-                  onClick={() => saveEdit(task.id)}
-                  className="p-1 text-green-600 hover:bg-green-50 rounded-lg transition"
-                >
-                  <Check size={14} />
-                </button>
-                <button
-                  onClick={() => setEditingId(null)}
-                  className="p-1 text-slate-400 hover:bg-slate-100 rounded-lg transition"
-                >
-                  <X size={14} />
-                </button>
+                <button onClick={() => saveEdit(task.id)}  className="p-1 text-green-600 hover:bg-green-50 rounded-lg transition"><Check size={14} /></button>
+                <button onClick={() => setEditingId(null)} className="p-1 text-slate-400 hover:bg-slate-100 rounded-lg transition"><X size={14} /></button>
               </div>
             ) : (
               <>
-                <span
-                  className={`flex-1 text-sm ${
-                    task.completed
-                      ? "line-through text-slate-400"
-                      : "text-slate-700"
-                  }`}
-                >
+                <span className={`flex-1 text-sm ${task.completed ? "line-through text-slate-400" : "text-slate-700"}`}>
                   {task.title}
                 </span>
                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => startEdit(task)}
-                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                  >
-                    <Edit2 size={13} />
-                  </button>
-                  <button
-                    onClick={() => onDelete(task.id)}
-                    className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                  >
-                    <Trash2 size={13} />
-                  </button>
+                  <button onClick={() => startEdit(task)}   className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"><Edit2 size={13} /></button>
+                  <button onClick={() => onDelete(task.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"><Trash2 size={13} /></button>
                 </div>
               </>
             )}
           </div>
         ))}
+
         {tasks.length === 0 && (
           <p className="text-sm text-slate-400 text-center py-6">
-            Пока нет задач — добавьте первую ниже
+            Задач пока нет — добавьте первую
           </p>
         )}
       </div>
 
-      {/* Add task */}
       <div className="px-4 py-3 border-t border-slate-100">
         <form onSubmit={handleAdd} className="flex gap-2">
           <input
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
-            placeholder="Добавить задачу…"
+            placeholder="Добавить задачу..."
             className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
           />
           <button
