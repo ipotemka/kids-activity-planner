@@ -139,6 +139,25 @@ async function handleSaveEvent(
 
   setEvents((prev) => [...prev, ...((newEvents ?? []) as CalendarEvent[])]);
 }
+  }
+
+async function handleDeleteEvent(id: string) {
+  if (!window.confirm("Удалить это мероприятие?")) return;
+
+  const { error } = await supabase
+    .from("events")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert(`Ошибка удаления мероприятия: ${error.message}`);
+    return;
+  }
+
+  setEvents((prev) =>
+    prev.filter((event) => event.id !== id)
+  );
+}
 async function handleToggleTask(id: string, completed: boolean) {
   const { error } = await supabase
     .from("tasks")
