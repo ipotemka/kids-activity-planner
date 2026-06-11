@@ -1,6 +1,12 @@
 // Child: the 3 values the DB CHECK constraint accepts — never add "All" here
-export type Child = "Venya" | "Sasha" | "Gavr";
-
+export type Child =
+  | "Venya"
+  | "Sasha"
+  | "Gavr"
+  | "All"
+  | "SashaVenya"
+  | "Ira"
+  | "Dima";
 export type EventSlot = "daytime" | "after-camp" | "evening";
 
 // English values — must match the Postgres CHECK constraint exactly
@@ -53,7 +59,6 @@ export interface Profile {
   role: UserRole;
   created_at: string;
 }
-
 export const CHILD_COLORS: Record<
   Child,
   { bg: string; text: string; border: string; light: string; badge: string; dot: string }
@@ -66,6 +71,7 @@ export const CHILD_COLORS: Record<
     badge: "bg-blue-100 text-blue-800",
     dot: "bg-blue-500",
   },
+
   Sasha: {
     bg: "bg-purple-500",
     text: "text-purple-700",
@@ -74,6 +80,7 @@ export const CHILD_COLORS: Record<
     badge: "bg-purple-100 text-purple-800",
     dot: "bg-purple-500",
   },
+
   Gavr: {
     bg: "bg-green-500",
     text: "text-green-700",
@@ -81,6 +88,42 @@ export const CHILD_COLORS: Record<
     light: "bg-green-50",
     badge: "bg-green-100 text-green-800",
     dot: "bg-green-500",
+  },
+
+  All: {
+    bg: "bg-amber-500",
+    text: "text-amber-700",
+    border: "border-amber-300",
+    light: "bg-amber-50",
+    badge: "bg-amber-100 text-amber-800",
+    dot: "bg-amber-500",
+  },
+
+  SashaVenya: {
+    bg: "bg-indigo-500",
+    text: "text-indigo-700",
+    border: "border-indigo-300",
+    light: "bg-indigo-50",
+    badge: "bg-indigo-100 text-indigo-800",
+    dot: "bg-indigo-500",
+  },
+
+  Ira: {
+    bg: "bg-rose-500",
+    text: "text-rose-700",
+    border: "border-rose-300",
+    light: "bg-rose-50",
+    badge: "bg-rose-100 text-rose-800",
+    dot: "bg-rose-500",
+  },
+
+  Dima: {
+    bg: "bg-cyan-500",
+    text: "text-cyan-700",
+    border: "border-cyan-300",
+    light: "bg-cyan-50",
+    badge: "bg-cyan-100 text-cyan-800",
+    dot: "bg-cyan-500",
   },
 };
 
