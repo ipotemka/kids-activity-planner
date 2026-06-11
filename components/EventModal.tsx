@@ -15,8 +15,15 @@ import {
 import { X } from "lucide-react";
 import { format } from "date-fns";
 
-const CHILDREN: Child[] = ["Venya", "Sasha", "Gavr"];
-
+const CHILDREN: Child[] = [
+  "Venya",
+  "Sasha",
+  "Gavr",
+  "All",
+  "SashaVenya",
+  "Ira",
+  "Dima",
+];
 // 00:00 → 23:45 in 15-minute steps.
 // We use <select> instead of <input type="time"> because browsers render
 // type="time" in AM/PM format on en-US / Apple locales with no HTML override.
