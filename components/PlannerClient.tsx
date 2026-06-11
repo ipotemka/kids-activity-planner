@@ -18,66 +18,89 @@ interface Props {
 
 export function PlannerClient({ initialEvents, initialTasks }: Props) {
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
-  const [tasks,  setTasks]  = useState<Task[]>(initialTasks);
-  const [modalOpen,    setModalOpen]    = useState(false);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [modalOpen, setModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
-  const [defaultDate,  setDefaultDate]  = useState<Date | undefined>();
-  const [defaultSlot,  setDefaultSlot]  = useState<EventSlot>("daytime");
+  const [defaultDate, setDefaultDate] = useState<Date | undefined>();
+  const [defaultSlot, setDefaultSlot] = useState<EventSlot>("daytime");
+  const [lastDeletedEvent, setLastDeletedEvent] =
+    useState<CalendarEvent | null>(null);
 
-  // Stable client — never recreated on re-render, keeps realtime subscription alive
   const [supabase] = useState(() => createClient());
   const weeks = groupByWeek(getAllDays());
 
   useEffect(() => {
     const channel = supabase
       .channel("planner-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "events" }, (payload) => {
-        if (payload.eventType === "INSERT")
-          setEvents((prev) => [...prev, payload.new as CalendarEvent]);
-        if (payload.eventType === "UPDATE")
-          setEvents((prev) =>
-            prev.map((e) => e.id === payload.new.id ? (payload.new as CalendarEvent) : e)
-          );
-        if (payload.eventType === "DELETE")
-          setEvents((prev) =>
-            prev.filter((e) => e.id !== (payload.old as CalendarEvent).id)
-          );
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "tasks" }, (payload) => {
-        if (payload.eventType === "INSERT")
-          setTasks((prev) => [...prev, payload.new as Task]);
-        if (payload.eventType === "UPDATE")
-          setTasks((prev) =>
-            prev.map((t) => t.id === payload.new.id ? (payload.new as Task) : t)
-          );
-        if (payload.eventType === "DELETE")
-          setTasks((prev) =>
-            prev.filter((t) => t.id !== (payload.old as Task).id)
-          );
-      })
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "events" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setEvents((prev) => [...prev, payload.new as CalendarEvent]);
+          }
+
+          if (payload.eventType === "UPDATE") {
+            setEvents((prev) =>
+              prev.map((e) =>
+                e.id === payload.new.id ? (payload.new as CalendarEvent) : e
+              )
+            );
+          }
+
+          if (payload.eventType === "DELETE") {
+            setEvents((prev) =>
+              prev.filter((e) => e.id !== (payload.old as CalendarEvent).id)
+            );
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tasks" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setTasks((prev) => [...prev, payload.new as Task]);
+          }
+
+          if (payload.eventType === "UPDATE") {
+            setTasks((prev) =>
+              prev.map((t) =>
+                t.id === payload.new.id ? (payload.new as Task) : t
+              )
+            );
+          }
+
+          if (payload.eventType === "DELETE") {
+            setTasks((prev) =>
+              prev.filter((t) => t.id !== (payload.old as Task).id)
+            );
+          }
+        }
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   function getEventsForDay(day: Date) {
     return events.filter((e) => isEventOnDay(e, day));
   }
-  
-function openAdd(day: Date) {
-  setEditingEvent(null);
-  setDefaultDate(day);
-  setDefaultSlot("daytime");
-  setModalOpen(true);
-}
+
+  function openAdd(day: Date) {
+    setEditingEvent(null);
+    setDefaultDate(day);
+    setDefaultSlot("daytime");
+    setModalOpen(true);
+  }
 
   function openEdit(event: CalendarEvent) {
     setEditingEvent(event);
     setModalOpen(true);
   }
 
-  // Always receives an array from EventModal.
-  // Edit: use data[0] for .update(). Insert: pass full array.
   async function handleSaveEvent(data: Partial<CalendarEvent>[]) {
     if (editingEvent) {
       const { data: updated, error } = await supabase
@@ -87,10 +110,13 @@ function openAdd(day: Date) {
         .select()
         .single();
 
-      if (error) { alert(`Ошибка сохранения: ${error.message}`); return; }
+      if (error) {
+        alert(`Ошибка сохранения: ${error.message}`);
+        return;
+      }
 
       setEvents((prev) =>
-        prev.map((e) => e.id === editingEvent.id ? (updated as CalendarEvent) : e)
+        prev.map((e) => (e.id === editingEvent.id ? (updated as CalendarEvent) : e))
       );
     } else {
       const { data: inserted, error } = await supabase
@@ -98,7 +124,10 @@ function openAdd(day: Date) {
         .insert(data)
         .select();
 
-      if (error) { alert(`Ошибка добавления: ${error.message}`); return; }
+      if (error) {
+        alert(`Ошибка добавления: ${error.message}`);
+        return;
+      }
 
       setEvents((prev) => [...prev, ...((inserted ?? []) as CalendarEvent[])]);
     }
@@ -106,36 +135,120 @@ function openAdd(day: Date) {
 
   async function handleDeleteEvent(id: string) {
     if (!window.confirm("Удалить это мероприятие?")) return;
+
+    const eventToDelete = events.find((event) => event.id === id);
+
     const { error } = await supabase.from("events").delete().eq("id", id);
-    if (error) { alert(`Ошибка удаления: ${error.message}`); return; }
+
+    if (error) {
+      alert(`Ошибка удаления: ${error.message}`);
+      return;
+    }
+
+    if (eventToDelete) {
+      setLastDeletedEvent(eventToDelete);
+    }
+
     setEvents((prev) => prev.filter((e) => e.id !== id));
   }
 
+  async function handleUndoDelete() {
+    if (!lastDeletedEvent) return;
+
+    const eventToRestore = {
+      child: lastDeletedEvent.child,
+      title: lastDeletedEvent.title,
+      start_date: lastDeletedEvent.start_date,
+      end_date: lastDeletedEvent.end_date,
+      start_time: lastDeletedEvent.start_time,
+      end_time: lastDeletedEvent.end_time,
+      location: lastDeletedEvent.location,
+      drop_off: lastDeletedEvent.drop_off,
+      pick_up: lastDeletedEvent.pick_up,
+      notes: lastDeletedEvent.notes,
+      type: lastDeletedEvent.type,
+      slot: lastDeletedEvent.slot,
+      created_by: lastDeletedEvent.created_by,
+      updated_by: lastDeletedEvent.updated_by,
+    };
+
+    const { data, error } = await supabase
+      .from("events")
+      .insert(eventToRestore)
+      .select()
+      .single();
+
+    if (error) {
+      alert(`Ошибка восстановления: ${error.message}`);
+      return;
+    }
+
+    setEvents((prev) => [...prev, data as CalendarEvent]);
+    setLastDeletedEvent(null);
+  }
+
   async function handleToggleTask(id: string, completed: boolean) {
-    const { error } = await supabase.from("tasks").update({ completed }).eq("id", id);
-    if (error) { alert(`Ошибка: ${error.message}`); return; }
-    setTasks((prev) => prev.map((t) => t.id === id ? { ...t, completed } : t));
+    const { error } = await supabase
+      .from("tasks")
+      .update({ completed })
+      .eq("id", id);
+
+    if (error) {
+      alert(`Ошибка: ${error.message}`);
+      return;
+    }
+
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed } : t))
+    );
   }
 
   async function handleAddTask(title: string) {
     const { data, error } = await supabase
-      .from("tasks").insert({ title, completed: false }).select();
-    if (error) { alert(`Ошибка добавления задачи: ${error.message}`); return; }
-    if (!data || data.length === 0) { alert("Задача не сохранилась."); return; }
+      .from("tasks")
+      .insert({ title, completed: false })
+      .select();
+
+    if (error) {
+      alert(`Ошибка добавления задачи: ${error.message}`);
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      alert("Задача не сохранилась.");
+      return;
+    }
+
     setTasks((prev) => [...prev, data[0] as Task]);
   }
 
   async function handleDeleteTask(id: string) {
     const { error } = await supabase.from("tasks").delete().eq("id", id);
-    if (error) { alert(`Ошибка удаления задачи: ${error.message}`); return; }
+
+    if (error) {
+      alert(`Ошибка удаления задачи: ${error.message}`);
+      return;
+    }
+
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }
 
   async function handleEditTask(id: string, title: string) {
     const { data: updated, error } = await supabase
-      .from("tasks").update({ title }).eq("id", id).select().single();
-    if (error) { alert(`Ошибка редактирования: ${error.message}`); return; }
-    setTasks((prev) => prev.map((t) => t.id === id ? (updated as Task) : t));
+      .from("tasks")
+      .update({ title })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      alert(`Ошибка редактирования: ${error.message}`);
+      return;
+    }
+
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? (updated as Task) : t))
+    );
   }
 
   return (
@@ -154,13 +267,16 @@ function openAdd(day: Date) {
 
           <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500">
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" />Веня
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" />
+              Веня
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" />Саша
+              <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" />
+              Саша
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" />Гавр
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" />
+              Гавр
             </span>
           </div>
         </div>
@@ -181,6 +297,7 @@ function openAdd(day: Date) {
                     {format(week[week.length - 1], "d MMM", { locale: ru })}
                   </span>
                 </div>
+
                 <div className="space-y-4">
                   {week.map((day) => (
                     <DayCard
@@ -218,6 +335,24 @@ function openAdd(day: Date) {
           />
         </div>
       </div>
+
+      {lastDeletedEvent && (
+        <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-lg flex items-center gap-3 text-sm">
+          <span>Мероприятие удалено</span>
+          <button
+            onClick={handleUndoDelete}
+            className="font-semibold text-blue-300 hover:text-blue-200"
+          >
+            Вернуть
+          </button>
+          <button
+            onClick={() => setLastDeletedEvent(null)}
+            className="text-slate-400 hover:text-white"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {modalOpen && (
         <EventModal
