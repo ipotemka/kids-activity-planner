@@ -25,8 +25,8 @@ CREATE TABLE public.events (
   start_time  TIME,
   end_time    TIME,
   location    TEXT,
-  drop_off    TEXT NOT NULL DEFAULT 'TBD',
-  pick_up     TEXT NOT NULL DEFAULT 'TBD',
+  drop_off    TEXT NOT NULL DEFAULT 'Не назначено',
+  pick_up     TEXT NOT NULL DEFAULT 'Не назначено',
   notes       TEXT,
   type        TEXT NOT NULL DEFAULT 'Camp'
                 CHECK (type IN ('Camp','Class','Sports','Arts','Workshop','Performance','Evening Event','Other')),
@@ -68,44 +68,44 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.events   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tasks    ENABLE ROW LEVEL SECURITY;
 
--- Profiles: users manage their own row
+-- Profiles: authenticated users only
 CREATE POLICY "profiles_select" ON public.profiles FOR SELECT TO authenticated USING (true);
 CREATE POLICY "profiles_insert" ON public.profiles FOR INSERT TO authenticated WITH CHECK (auth.uid() = id);
 CREATE POLICY "profiles_update" ON public.profiles FOR UPDATE TO authenticated USING (auth.uid() = id);
 
--- Events: all authenticated users can CRUD
-CREATE POLICY "events_select" ON public.events FOR SELECT TO authenticated USING (true);
-CREATE POLICY "events_insert" ON public.events FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "events_update" ON public.events FOR UPDATE TO authenticated USING (true);
-CREATE POLICY "events_delete" ON public.events FOR DELETE TO authenticated USING (true);
+-- Events: open access via anon key (no login required)
+CREATE POLICY "events_select" ON public.events FOR SELECT TO anon USING (true);
+CREATE POLICY "events_insert" ON public.events FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "events_update" ON public.events FOR UPDATE TO anon USING (true);
+CREATE POLICY "events_delete" ON public.events FOR DELETE TO anon USING (true);
 
--- Tasks: all authenticated users can CRUD
-CREATE POLICY "tasks_select" ON public.tasks FOR SELECT TO authenticated USING (true);
-CREATE POLICY "tasks_insert" ON public.tasks FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "tasks_update" ON public.tasks FOR UPDATE TO authenticated USING (true);
-CREATE POLICY "tasks_delete" ON public.tasks FOR DELETE TO authenticated USING (true);
+-- Tasks: open access via anon key (no login required)
+CREATE POLICY "tasks_select" ON public.tasks FOR SELECT TO anon USING (true);
+CREATE POLICY "tasks_insert" ON public.tasks FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "tasks_update" ON public.tasks FOR UPDATE TO anon USING (true);
+CREATE POLICY "tasks_delete" ON public.tasks FOR DELETE TO anon USING (true);
 
--- ── Seed: confirmed activities ─────────────────────────────
+-- ── Seed: confirmed activities (2026) ──────────────────────
 INSERT INTO public.events
   (child, title, start_date, end_date, start_time, end_time, location, drop_off, pick_up, type, slot)
 VALUES
   ('Venya', 'Minecraft Portal',
-   '2025-06-29', '2025-07-03', '09:00', '18:00', 'New School', 'TBD', 'TBD', 'Camp', 'daytime'),
+   '2026-06-29', '2026-07-03', '09:00', '18:00', 'New School', 'Не назначено', 'Не назначено', 'Camp', 'daytime'),
 
   ('Venya', 'Skateboarding',
-   '2025-07-06', '2025-07-10', '09:00', '18:00', 'New School', 'TBD', 'TBD', 'Sports', 'daytime'),
+   '2026-07-06', '2026-07-10', '09:00', '18:00', 'New School', 'Не назначено', 'Не назначено', 'Sports', 'daytime'),
 
   ('Sasha', 'Contemporary Dance',
-   '2025-06-29', '2025-07-03', '09:00', '18:00', 'New School', 'TBD', 'TBD', 'Arts', 'daytime'),
+   '2026-06-29', '2026-07-03', '09:00', '18:00', 'New School', 'Не назначено', 'Не назначено', 'Arts', 'daytime'),
 
   ('Sasha', 'Contemporary Animation: Imagining the Future',
-   '2025-07-06', '2025-07-10', '09:00', '18:00', 'New School', 'TBD', 'TBD', 'Arts', 'daytime');
+   '2026-07-06', '2026-07-10', '09:00', '18:00', 'New School', 'Не назначено', 'Не назначено', 'Arts', 'daytime');
 
 -- ── Seed: family task checklist ───────────────────────────
 INSERT INTO public.tasks (title, completed) VALUES
-  ('Buy all camp supplies',                false),
-  ('Verify activity locations',            false),
-  ('Fill in drop-off and pick-up contacts', false),
-  ('Add evening events',                   false),
-  ('Confirm Gavr''s schedule',             false),
-  ('Pack backpacks for the first week',    false);
+  ('Купить всё для лагеря',              false),
+  ('Проверить адреса мероприятий',       false),
+  ('Назначить отвозит/забирает',         false),
+  ('Добавить вечерние мероприятия',      false),
+  ('Подтвердить расписание Гавра',       false),
+  ('Собрать рюкзаки на первую неделю',   false);
